@@ -1,4 +1,4 @@
-import connection from "../database/db";
+import connection from "../database/db.js";
 
 export async function clientsControllers(req, res) {
     const { name, adress, phone } = req.body;

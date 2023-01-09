@@ -1,4 +1,4 @@
-import connection from "../database/db";
+import connection from "../database/db.js";
 
 export async function cakesControllers(req, res) {
     const { name, price, image, description } = req.body;

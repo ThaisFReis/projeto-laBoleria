@@ -7,7 +7,7 @@ export async function clientsMiddlewares(req, res, next) {
     const schema = joi.object({
         name: joi.string().required(),
         adress: joi.string().required(),
-        phone: joi.string().required(),
+        phone: joi.string().min(10).max(11).required()
     });
 
     // Validation
@@ -15,6 +15,11 @@ export async function clientsMiddlewares(req, res, next) {
 
     if (validation.error) {
         return res.status(400).send(validation.error.details[0].message);
+    }
+
+    // The name, the adress and the phone can't be empty
+    if (name === "" || adress === "" || phone === "") {
+        return res.status(400).send("Nome, endereço e telefone não podem ficar em branco");
     }
     
     next();

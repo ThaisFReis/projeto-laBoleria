@@ -14,9 +14,9 @@ app.use(cors());
 app.use(json());
 
 // use routes
-app.use('/cakes', cakesRoutes);
-app.use('/clients', clientsRoutes);
-app.use('/orders', ordersRoutes);
+app.use(cakesRoutes);
+app.use(clientsRoutes);
+app.use(ordersRoutes);
 
 const PORT = process.env.PORT;
 

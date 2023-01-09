@@ -26,10 +26,10 @@ SET default_table_access_method = heap;
 
 CREATE TABLE public.cakes (
     id integer NOT NULL,
-    name character varying(255) NOT NULL,
+    name character varying(255) NOT NULL UNIQUE,
     price numeric(255,0) NOT NULL,
     image character varying(255) NOT NULL,
-    description text NOT NULL
+    description text
 );
 
 
@@ -94,30 +94,10 @@ CREATE TABLE public.orders (
     id integer NOT NULL,
     "clientId" integer NOT NULL,
     "cakeId" integer NOT NULL,
-    quantity integer NOT NULL,
-    "createdAt" timestamp without time zone NOT NULL,
+    "quantity" integer NOT NULL,
+    "createdAt" timestamp NOT NULL,
     "totalPrice" numeric(255,0) NOT NULL
 );
-
-
---
--- Name: orders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.orders_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: orders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.orders_id_seq OWNED BY public.orders.id;
 
 
 --
@@ -132,13 +112,6 @@ ALTER TABLE ONLY public.cakes ALTER COLUMN id SET DEFAULT nextval('public.cakes_
 --
 
 ALTER TABLE ONLY public.clients ALTER COLUMN id SET DEFAULT nextval('public.clients_id_seq'::regclass);
-
-
---
--- Name: orders id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.orders ALTER COLUMN id SET DEFAULT nextval('public.orders_id_seq'::regclass);
 
 
 --
@@ -174,13 +147,6 @@ SELECT pg_catalog.setval('public.clients_id_seq', 1, false);
 
 
 --
--- Name: orders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.orders_id_seq', 1, false);
-
-
---
 -- Name: cakes cakes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -194,14 +160,6 @@ ALTER TABLE ONLY public.cakes
 
 ALTER TABLE ONLY public.clients
     ADD CONSTRAINT clients_pkey PRIMARY KEY (id);
-
-
---
--- Name: orders orders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.orders
-    ADD CONSTRAINT orders_pkey PRIMARY KEY (id);
 
 
 --
@@ -223,4 +181,3 @@ ALTER TABLE ONLY public.orders
 --
 -- PostgreSQL database dump complete
 --
-
