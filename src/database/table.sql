@@ -26,8 +26,8 @@ SET default_table_access_method = heap;
 
 CREATE TABLE public.cakes (
     id integer NOT NULL,
-    name character varying(255) NOT NULL UNIQUE,
-    price numeric(255,0) NOT NULL,
+    name character varying(255) NOT NULL,
+    price double precision NOT NULL,
     image character varying(255) NOT NULL,
     description text
 );
@@ -60,9 +60,8 @@ ALTER SEQUENCE public.cakes_id_seq OWNED BY public.cakes.id;
 CREATE TABLE public.clients (
     id integer NOT NULL,
     name character varying(255) NOT NULL,
-    price numeric(255,0) NOT NULL,
-    image character varying(255) NOT NULL,
-    description text NOT NULL
+    address character varying(255) NOT NULL,
+    phone character varying(255) NOT NULL
 );
 
 
@@ -94,10 +93,30 @@ CREATE TABLE public.orders (
     id integer NOT NULL,
     "clientId" integer NOT NULL,
     "cakeId" integer NOT NULL,
-    "quantity" integer NOT NULL,
-    "createdAt" timestamp NOT NULL,
+    quantity integer NOT NULL,
+    "createdAt" timestamp without time zone NOT NULL,
     "totalPrice" numeric(255,0) NOT NULL
 );
+
+
+--
+-- Name: orders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.orders_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: orders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.orders_id_seq OWNED BY public.orders.id;
 
 
 --
@@ -115,35 +134,65 @@ ALTER TABLE ONLY public.clients ALTER COLUMN id SET DEFAULT nextval('public.clie
 
 
 --
+-- Name: orders id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.orders ALTER COLUMN id SET DEFAULT nextval('public.orders_id_seq'::regclass);
+
+
+--
 -- Data for Name: cakes; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO public.cakes VALUES (5, 'bolo', 20, 'https://blog.pajaris.com.br/wp-content/uploads/2020/10/bolo-de-pote-de-oreo-768x768.jpg', 'aaaaaaaa');
+INSERT INTO public.cakes VALUES (6, 'bolo 1', 20, 'https://blog.pajaris.com.br/wp-content/uploads/2020/10/bolo-de-pote-de-oreo-768x768.jpg', 'aaaaaaaa');
+INSERT INTO public.cakes VALUES (7, 'bolo 30', 21, 'https://blog.pajaris.com.br/wp-content/uploads/2020/10/bolo-de-pote-de-oreo-768x768.jpg', 'aaaaaaaa');
+INSERT INTO public.cakes VALUES (8, 'bolo de chocolate', 21, 'https://blog.pajaris.com.br/wp-content/uploads/2020/10/bolo-de-pote-de-oreo-768x768.jpg', 'aaaaaaaa');
+INSERT INTO public.cakes VALUES (9, 'bolo de chocolate 1', 20, 'https://blog.pajaris.com.br/wp-content/uploads/2020/10/bolo-de-pote-de-oreo-768x768.jpg', 'aaaaaaaa');
+INSERT INTO public.cakes VALUES (10, 'bolo de morango', 20, 'https://blog.pajaris.com.br/wp-content/uploads/2020/10/bolo-de-pote-de-oreo-768x768.jpg', 'aaaaaaaa');
+INSERT INTO public.cakes VALUES (11, 'bolo de oreo', 32, 'https://blog.pajaris.com.br/wp-content/uploads/2020/10/bolo-de-pote-de-oreo-768x768.jpg', 'aaaaaaaa');
+INSERT INTO public.cakes VALUES (12, 'bolo de oreo de morango', 31, 'https://blog.pajaris.com.br/wp-content/uploads/2020/10/bolo-de-pote-de-oreo-768x768.jpg', 'aaaaaaaa');
+INSERT INTO public.cakes VALUES (13, 'bolo de oreo aaaa', 31.32, 'https://blog.pajaris.com.br/wp-content/uploads/2020/10/bolo-de-pote-de-oreo-768x768.jpg', 'aaaaaaaa');
+INSERT INTO public.cakes VALUES (14, 'bolo de aaaaaa', 80, 'https://blog.pajaris.com.br/wp-content/uploads/2020/10/bolo-de-pote-de-oreo-768x768.jpg', 'aaaaaaaa');
 
 
 --
 -- Data for Name: clients; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO public.clients VALUES (6, 'João', 'rio de janeiro, RJ', '21985712371');
+INSERT INTO public.clients VALUES (7, 'João', 'rio de janeiro, RJ', '21985712371');
+INSERT INTO public.clients VALUES (8, 'Thais', 'rio de janeiro, RJ', '21985712371');
 
 
 --
 -- Data for Name: orders; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO public.orders VALUES (37, 6, 6, 5, '2023-01-11 15:33:45.338', 100);
+INSERT INTO public.orders VALUES (38, 8, 5, 5, '2023-01-11 15:34:13.609', 100);
+INSERT INTO public.orders VALUES (39, 8, 5, 3, '2023-01-11 15:34:22.369', 60);
 
 
 --
 -- Name: cakes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.cakes_id_seq', 1, false);
+SELECT pg_catalog.setval('public.cakes_id_seq', 14, true);
 
 
 --
 -- Name: clients_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.clients_id_seq', 1, false);
+SELECT pg_catalog.setval('public.clients_id_seq', 8, true);
+
+
+--
+-- Name: orders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.orders_id_seq', 39, true);
 
 
 --
@@ -163,21 +212,14 @@ ALTER TABLE ONLY public.clients
 
 
 --
--- Name: orders orders_cakeId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: orders orders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.orders
-    ADD CONSTRAINT "orders_cakeId_fkey" FOREIGN KEY ("cakeId") REFERENCES public.cakes(id);
-
-
---
--- Name: orders orders_clientId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.orders
-    ADD CONSTRAINT "orders_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES public.clients(id);
+    ADD CONSTRAINT orders_pkey PRIMARY KEY (id);
 
 
 --
 -- PostgreSQL database dump complete
 --
+
