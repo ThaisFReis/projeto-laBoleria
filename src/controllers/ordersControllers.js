@@ -38,7 +38,7 @@ export async function getOrdersByDate(req, res) {
         try {
             // Get all orders with the date
             const orders = await connection.query(
-                `SELECT orders.id as orderId, orders.quantity, orders."createdAt", orders."totalPrice", orders."cakeId", orders."clientId"
+                `SELECT orders.id, orders.quantity, orders."createdAt", orders."totalPrice", orders."cakeId", orders."clientId"
                 FROM orders WHERE orders."createdAt"::date = $1`,
                 [date]
             );
@@ -70,7 +70,7 @@ export async function getOrdersByDate(req, res) {
                         description: cake.rows[0].description,
                         image: cake.rows[0].image
                     },
-                    orderId: order.orderId,
+                    orderId: order.id,
                     quantity: order.quantity,
                     createdAt: order.createdAt,
                     totalPrice: order.totalPrice
@@ -139,10 +139,8 @@ export async function getOrdersById(req, res) {
 
     // Return the requested order infos
     const client = await connection.query(`SELECT * FROM clients WHERE id = $1`, [order.rows[0].clientId]);
-    console.log(client);
 
     const cake = await connection.query(`SELECT * FROM cakes WHERE id = $1`, [order.rows[0].cakeId]);
-    console.log(cake);
 
     const orderInfo = {
         client: {
